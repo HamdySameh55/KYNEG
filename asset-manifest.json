@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/KYNEG/static/css/main.e6c13ad2.css",
+    "main.js": "/KYNEG/static/js/main.a74ac8d5.js",
+    "static/js/453.d09543d5.chunk.js": "/KYNEG/static/js/453.d09543d5.chunk.js",
+    "static/media/sign.png": "/KYNEG/static/media/sign.a8e6e74495c7087017fc.png",
+    "static/media/kyn_logo_transparent.png": "/KYNEG/static/media/kyn_logo_transparent.72fca93a808098133f8d.png",
+    "index.html": "/KYNEG/index.html",
+    "main.e6c13ad2.css.map": "/KYNEG/static/css/main.e6c13ad2.css.map",
+    "main.a74ac8d5.js.map": "/KYNEG/static/js/main.a74ac8d5.js.map",
+    "453.d09543d5.chunk.js.map": "/KYNEG/static/js/453.d09543d5.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e6c13ad2.css",
+    "static/js/main.a74ac8d5.js"
+  ]
+}
