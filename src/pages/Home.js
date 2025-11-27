@@ -730,58 +730,79 @@ export default function Home() {
 
       </motion.div>
 {/* 4. About the Brand Section */}
-<motion.div
-  initial={{ opacity: 0, y: 30 }}
-  whileInView={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.6 }}
-  viewport={{ once: true }}
-  style={{
-    maxWidth: "1000px",
-    margin: "80px auto",
-    padding: "40px 20px",
-    textAlign: "center",
-  }}
->
-  <h2 style={{
-    fontSize: "2rem",
-    fontWeight: "700",
-    marginBottom: "15px",
-    color: "#fff",
-  }}>
-    About KYN
-  </h2>
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6 }}
+      viewport={{ once: true }}
+      style={{
+        maxWidth: "800px",
+        margin: "80px auto",
+        padding: "40px 20px",
+        textAlign: "center",
+        color: "#fff",
+        fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+        lineHeight: "1.8",
+      }}
+    >
+      <h2 style={{
+        fontSize: "2.5rem",
+        fontWeight: "800",
+        marginBottom: "30px",
+        letterSpacing: "1px",
+        color: "#fff",
+      }}>
+        About KYN
+      </h2>
 
-  <p style={{
-    fontSize: "1.2rem",
-    color: "rgba(255,255,255,0.8)",
-    marginBottom: "30px",
-    lineHeight: "1.6",
-  }}>
-    We craft premium, stylish footwear that fits your lifestyle.<br/>
-    Our designs combine quality, comfort, and a touch of uniqueness that sets us apart.
-  </p>
+      <p style={{
+        fontSize: "1.15rem",
+        color: "rgba(255,255,255,0.85)",
+        marginBottom: "25px",
+        textAlign: "justify",
+      }}>
+        At KYN, we craft premium, stylish footwear designed to fit your lifestyle. 
+        Every pair combines quality, comfort, and a unique touch that sets you apart.
+      </p>
 
-  <motion.button
-    onClick={() => navigate("/about")}
-    whileHover={{ scale: 1.05, backgroundColor: "#fff", color: "#000" }}
-    whileTap={{ scale: 0.95 }}
-    style={{
-      padding: "15px 45px",
-      fontSize: "1rem",
-      fontWeight: "700",
-      background: "transparent",
-      border: "3px solid #fff",
-      color: "#fff",
-      borderRadius: "50px",
-      cursor: "pointer",
-      transition: "all 0.3s ease",
-      textTransform: "uppercase",
-      letterSpacing: "1.5px",
-    }}
-  >
-    Learn More
-  </motion.button>
-</motion.div>
+      <p style={{
+        fontSize: "1.15rem",
+        color: "rgba(255,255,255,0.85)",
+        marginBottom: "35px",
+        textAlign: "justify",
+      }}>
+        Inspired by movement, dreams, and individuality, KYN is more than just footwear — it's a statement. 
+        Each design carries a story, a step forward, and a feeling you can wear.
+      </p>
+
+      {/* الزرار مع Hover و Click مضبوط */}
+      <motion.div
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        style={{ display: "inline-block" }}
+      >
+        <button
+          onClick={() => navigate("/about")} // يروح للصفحة About
+          style={{
+            padding: "15px 50px",
+             zIndex: 100, // لازم يكون أعلى من أي خلفية
+      pointerEvents: "auto", // مهم للضغط
+            fontSize: "1rem",
+            fontWeight: "700",
+            background: "transparent",
+            border: "3px solid #fff",
+            color: "#fff",
+            borderRadius: "50px",
+            cursor: "pointer",
+            textTransform: "uppercase",
+            letterSpacing: "1.5px",
+            transition: "all 0.3s ease",
+          }}
+        >
+          Learn More
+        </button>
+      </motion.div>
+    </motion.div>
 
       <style>
         {`
