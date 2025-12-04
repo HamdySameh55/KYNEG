@@ -1,86 +1,105 @@
 // src/context/CartContext.jsx
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useReducer } from 'react';
 
 const CartContext = createContext();
 
-export const useCart = () => useContext(CartContext);
-
-export default function CartProvider({ children }) {
-  const [cart, setCart] = useState([]);
-
-  // جلب السلة من localStorage عند تحميل التطبيق
-  useEffect(() => {
-    try {
-      const savedCart = localStorage.getItem("kyn_cart");   // ← مفتاح موحد بدون شرطة
-      if (savedCart) {
-        setCart(JSON.parse(savedCart));
+const cartReducer = (state, action) => {
+  switch (action.type) {
+    case 'ADD_TO_CART':
+      const existingItem = state.items.find(
+        item => item.id === action.payload.id && 
+                item.selectedSize === action.payload.selectedSize
+      );
+      if (existingItem) {
+        return {
+          ...state,
+          items: state.items.map(item =>
+            item.id === action.payload.id && item.selectedSize === action.payload.selectedSize
+              ? { ...item, quantity: item.quantity + 1 }
+              : item
+          )
+        };
+      } else {
+        return {
+          ...state,
+          items: [...state.items, { ...action.payload, quantity: 1 }]
+        };
       }
-    } catch (error) {
-      console.error("Error loading cart from localStorage:", error);
-      setCart([]);
-    }
-  }, []);
+    
+    case 'REMOVE_FROM_CART':
+      return {
+        ...state,
+        items: state.items.filter(
+          item => !(item.id === action.payload.id && item.selectedSize === action.payload.selectedSize)
+        )
+      };
+    
+    case 'UPDATE_QUANTITY':
+      if (action.payload.quantity === 0) {
+        return {
+          ...state,
+          items: state.items.filter(
+            item => !(item.id === action.payload.id && item.selectedSize === action.payload.selectedSize)
+          )
+        };
+      }
+      return {
+        ...state,
+        items: state.items.map(item =>
+          item.id === action.payload.id && item.selectedSize === action.payload.selectedSize
+            ? { ...item, quantity: action.payload.quantity }
+            : item
+        )
+      };
+    
+    case 'CLEAR_CART':
+      return { ...state, items: [] };
+    
+    default:
+      return state;
+  }
+};
 
-  // حفظ السلة في localStorage كل ما تتغير
-  useEffect(() => {
-    try {
-      localStorage.setItem("kyn_cart", JSON.stringify(cart));   // ← نفس المفتاح هنا
-    } catch (error) {
-      console.error("Error saving cart to localStorage:", error);
-    }
-  }, [cart]);
+const initialState = { items: [] };
+
+export const CartProvider = ({ children }) => {
+  const [state, dispatch] = useReducer(cartReducer, initialState);
 
   const addToCart = (product) => {
-    setCart((prev) => {
-      const existing = prev.find((item) => item.id === product.id);
-      if (existing) {
-        return prev.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        );
-      }
-      return [...prev, { ...product, quantity: 1 }];
+    dispatch({ type: 'ADD_TO_CART', payload: product });
+  };
+
+  const removeFromCart = (product) => {
+    dispatch({ type: 'REMOVE_FROM_CART', payload: product });
+  };
+
+  const updateQuantity = (product, quantity) => {
+    dispatch({
+      type: 'UPDATE_QUANTITY',
+      payload: { id: product.id, selectedSize: product.selectedSize, quantity }
     });
-    alert(`${product.name} added to cart!`);
   };
 
-  const removeFromCart = (id) => {
-    setCart((prev) => prev.filter((item) => item.id !== id));
-  };
+  const clearCart = () => dispatch({ type: 'CLEAR_CART' });
 
-  const updateQuantity = (id, quantity) => {
-    if (quantity <= 0) {
-      removeFromCart(id);
-      return;
-    }
-    setCart((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, quantity } : item))
-    );
-  };
-
-  const clearCart = () => setCart([]);
-
-  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0, 0);
-
-  const cartTotal = cart.reduce((sum, item) => {
-    const price = parseFloat(item.price.replace(/[^0-9.-]+/g, "")) || 0;
-    return sum + price * item.quantity;
-  }, 0);
+  const cartCount = state.items.reduce((total, item) => total + item.quantity, 0);
 
   return (
-    <CartContext.Provider
-      value={{
-        cart,
-        addToCart,
-        removeFromCart,
-        updateQuantity,
-        clearCart,
-        cartCount,
-        cartTotal,
-      }}
-    >
+    <CartContext.Provider value={{
+      cartItems: state.items,
+      cartCount,
+      addToCart,
+      removeFromCart,
+      updateQuantity,
+      clearCart
+    }}>
       {children}
     </CartContext.Provider>
   );
-}
+};
+
+export const useCart = () => {
+  const context = useContext(CartContext);
+  if (!context) throw new Error('useCart must be used within a CartProvider');
+  return context;
+};
